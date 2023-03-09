@@ -3,7 +3,7 @@
 @using TestValidation.Models;
 <h3>Edit Form With Valid Submit AND Validator Component</h3>
 
-<EditForm Model="testModel" OnValidSubmit="Submit">
+<EditForm Model="testModel" OnValidSubmit="Submit" OnInvalidSubmit="ClearSubmitMessage">
     <DataAnnotationsValidator />
     <label>Test String</label>
     <InputText @bind-Value="testModel.TestString"></InputText>
@@ -23,5 +23,10 @@
     private void Submit()
     {
         submitted = "I sumbmitted";
+    }
+
+    private void ClearSubmitMessage()
+    {
+        submitted = "";
     }
 }

@@ -1,0 +1,56 @@
+﻿@page "/ManualValidation"
+
+@using TestValidation.Models;
+<h3>Edit Form With Valid Submit AND Validator Component</h3>
+
+<EditForm OnValidSubmit="Submit" EditContext="editContext" OnInvalidSubmit="ClearSubmitMessage">
+    <DataAnnotationsValidator />
+    <label>Test String</label>
+    <InputText @bind-Value="testModel.TestString"></InputText>
+    <ValidationMessage For="() => testModel.TestString"></ValidationMessage>
+    <button type="submit">Submit</button>
+</EditForm>
+
+<div>
+    @submitted
+</div>
+
+@code {
+    private MyTestModelWithValidationAttributes testModel { get; set; } = new();
+
+    private string submitted = "";
+    private EditContext editContext;
+
+    ValidationMessageStore store;
+
+    protected override void OnInitialized()
+    {
+        editContext = new(testModel);
+
+        store = new ValidationMessageStore(editContext);
+
+        editContext.OnValidationRequested += OnValidationRequested;
+    }
+
+    // Validation Evenbt Handler
+    private void OnValidationRequested(object? sender, ValidationRequestedEventArgs e)
+    {
+        store.Clear();
+
+        if (testModel.TestString?.Contains("bad") ?? false)
+        {
+            store.Add(new FieldIdentifier(testModel, nameof(testModel.TestString)), "you have 'bad' in your string");
+            editContext.NotifyValidationStateChanged();
+        }
+    }
+
+    private void Submit()
+    {
+        submitted = "I sumbmitted";
+    }
+
+    private void ClearSubmitMessage()
+    {
+        submitted = "";
+    }
+}
