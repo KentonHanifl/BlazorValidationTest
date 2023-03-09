@@ -1,0 +1,27 @@
+﻿@page "/EditFormWithValidSubmitAndValidatorComponent"
+
+@using TestValidation.Models;
+<h3>Edit Form With Valid Submit No Validator Component</h3>
+
+<EditForm Model="testModel" OnValidSubmit="Submit">
+    <DataAnnotationsValidator />
+    <label>Test String</label>
+    <InputText @bind-Value="testModel.TestString"></InputText>
+    <ValidationMessage For="() => testModel.TestString"></ValidationMessage>
+    <button type="submit">Submit</button>
+</EditForm>
+
+<div>
+    @submitted;
+</div>
+
+@code {
+    private MyTestModelWithValidationAttributes testModel { get; set; } = new();
+
+    private string submitted = "";
+
+    private void Submit()
+    {
+        submitted = "I sumbmitted";
+    }
+}
